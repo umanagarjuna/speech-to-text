@@ -1,0 +1,48 @@
+server:
+  port: ${SERVER_PORT:8080}
+  compression:
+    enabled: true
+
+spring:
+  application:
+    name: speech-to-text
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE:100MB}
+      max-request-size: ${MAX_REQUEST_SIZE:100MB}
+      enabled: true
+  jackson:
+    serialization:
+      indent-output: true
+      write-dates-as-timestamps: false
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /
+  endpoint:
+    health:
+      show-details: always
+  health:
+    diskspace:
+      enabled: true
+
+# Speech-to-Text Configuration
+transcription:
+  model-path: ${MODEL_PATH:/models/vosk-model-small-en-us-0.15}
+  sample-rate: ${SAMPLE_RATE:16000}
+  supported-formats: wav,mp3,flac,ogg,m4a
+  temp-directory: ${TEMP_DIR:/tmp/transcriptions}
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.zoominfo: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+  file:
+    name: ${LOG_FILE:/var/log/speech-to-text.log}
